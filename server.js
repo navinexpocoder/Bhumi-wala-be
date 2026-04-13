@@ -4,6 +4,8 @@ const fileUpload = require('express-fileupload');
 const swaggerUi = require('swagger-ui-express');
 const http = require('http');
 const socketIO = require('socket.io');
+const path = require('path');
+const os = require('os');
 require('dotenv').config();
 
 const connectDB = require('./config/db');
@@ -29,11 +31,11 @@ const server = http.createServer(app);
 
 // CORS configuration
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:3000',
-  process.env.FRONTEND_URL || 'http://localhost:5173', // Vite dev server
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
   'http://localhost:3000',
   'http://localhost:5173',
-];
+].filter(Boolean); // Remove undefined/empty values
 
 // Configure CORS for Express
 app.use(cors({
@@ -65,7 +67,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({
   useTempFiles: true,
-  tempFileDir: './uploads/temp/',  // Changed from /tmp/ to relative path
+  tempFileDir: path.join(os.tmpdir(), 'express-fileupload'),
   limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max
   createParentPath: true, // Auto-create temp directory if it doesn't exist
 }));

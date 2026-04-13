@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: property-sales-api
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        scope: build
+        sync: false
+      - key: JWT_SECRET
+        scope: build
+        sync: false
+      - key: CLIENT_URL
+        scope: build
+        sync: false
+      - key: FRONTEND_URL
+        scope: build
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        scope: build
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        scope: build
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        scope: build
+        sync: false
+      - key: LOG_LEVEL
+        value: info
