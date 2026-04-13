@@ -1,0 +1,282 @@
+{
+  "info": {
+    "_postman_id": "f4e9dd9f-03e3-4d48-8a68-0a8baf2d14cf",
+    "name": "Bhumi Chat API",
+    "description": "Chat API collection for buyer-seller property conversations, messages, notifications, and unread summaries.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "propertyId",
+      "value": ""
+    },
+    {
+      "key": "conversationId",
+      "value": ""
+    },
+    {
+      "key": "notificationId",
+      "value": ""
+    },
+    {
+      "key": "page",
+      "value": "1"
+    },
+    {
+      "key": "limit",
+      "value": "20"
+    }
+  ],
+  "item": [
+    {
+      "name": "1) Create Or Get Conversation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"propertyId\": \"{{propertyId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/chat/conversations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "conversations"
+          ]
+        },
+        "description": "Creates a new conversation or returns existing one for (propertyId, buyerId, sellerId)."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200 or 201', function () {",
+              "  pm.expect([200, 201]).to.include(pm.response.code);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "pm.test('Response has data._id', function () {",
+              "  pm.expect(json).to.have.property('data');",
+              "  pm.expect(json.data).to.have.property('_id');",
+              "});",
+              "",
+              "if (json && json.data && json.data._id) {",
+              "  pm.collectionVariables.set('conversationId', json.data._id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2) Get User Conversations",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/chat/conversations?page={{page}}&limit={{limit}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "conversations"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "{{page}}"
+            },
+            {
+              "key": "limit",
+              "value": "{{limit}}"
+            }
+          ]
+        },
+        "description": "Returns current user's conversation list with pagination and unread counts."
+      }
+    },
+    {
+      "name": "3) Get Messages By Conversation",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/chat/conversations/{{conversationId}}/messages?page={{page}}&limit=50",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "conversations",
+            "{{conversationId}}",
+            "messages"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "{{page}}"
+            },
+            {
+              "key": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "description": "Returns paginated messages for the selected conversation."
+      }
+    },
+    {
+      "name": "4) Mark Messages As Seen",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "{{baseUrl}}/api/chat/conversations/{{conversationId}}/seen",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "conversations",
+            "{{conversationId}}",
+            "seen"
+          ]
+        },
+        "description": "Marks unread messages for current user as seen in this conversation."
+      }
+    },
+    {
+      "name": "5) Get Notifications",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/chat/notifications?page={{page}}&limit={{limit}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "notifications"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "{{page}}"
+            },
+            {
+              "key": "limit",
+              "value": "{{limit}}"
+            }
+          ]
+        },
+        "description": "Returns paginated notifications for current user."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "if (json && json.data && Array.isArray(json.data.notifications) && json.data.notifications.length > 0) {",
+              "  pm.collectionVariables.set('notificationId', json.data.notifications[0]._id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6) Mark One Notification Read",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "{{baseUrl}}/api/chat/notifications/{{notificationId}}/read",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "notifications",
+            "{{notificationId}}",
+            "read"
+          ]
+        },
+        "description": "Marks one notification as read."
+      }
+    },
+    {
+      "name": "7) Mark All Notifications Read",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "{{baseUrl}}/api/chat/notifications/read-all",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "notifications",
+            "read-all"
+          ]
+        },
+        "description": "Marks all unread notifications as read for current user."
+      }
+    },
+    {
+      "name": "8) Get Unread Summary",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/chat/unread-summary",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "unread-summary"
+          ]
+        },
+        "description": "Returns unreadMessages, unreadNotifications, and unreadTotal."
+      }
+    }
+  ]
+}

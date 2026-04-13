@@ -1,0 +1,183 @@
+{
+  "info": {
+    "name": "Location API - Property Sales",
+    "_postman_id": "8f3a2b6a-9b3e-4f7a-8d2e-1c2f7b9a6d3e",
+    "description": "Collection for Location endpoints (bbox support)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Locations (bbox)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations?lat1={{lat1}}&long1={{long1}}&lat2={{lat2}}&long2={{long2}}&page=1&limit=50",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations"
+          ],
+          "query": [
+            { "key": "lat1", "value": "{{lat1}}" },
+            { "key": "long1", "value": "{{long1}}" },
+            { "key": "lat2", "value": "{{lat2}}" },
+            { "key": "long2", "value": "{{long2}}" },
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "50" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Locations (regular)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations?state={{state}}&name={{name}}&page=1&limit=50",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations"],
+          "query": [
+            { "key": "state", "value": "" },
+            { "key": "name", "value": "" },
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "50" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Location by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations",":id"]
+        }
+      }
+    },
+    {
+      "name": "Create Location",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Example Place\",\n  \"state\": \"Example State\",\n  \"latitude\": 12.9716,\n  \"longitude\": 77.5946\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/locations",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations"]
+        }
+      },
+      "description": "Requires admin auth if enabled; set Authorization header as needed."
+    },
+    {
+      "name": "Update Location",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Place\",\n  \"state\": \"Updated State\",\n  \"latitude\": 12.9716,\n  \"longitude\": 77.5946\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations",":id"]
+        }
+      },
+      "description": "Requires admin auth if enabled; set Authorization header as needed."
+    },
+    {
+      "name": "Delete Location",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations",":id"]
+        }
+      },
+      "description": "Requires admin auth if enabled."
+    },
+    {
+      "name": "Get Locations By State",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/state/:state?page=1&limit=50",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations","state",":state"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "50" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search Locations by Name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/search/:name?page=1&limit=50",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations","search",":name"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "50" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Current Coordinates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/current/coordinates?latitude={{latitude}}&longitude={{longitude}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations","current","coordinates"],
+          "query": [
+            { "key": "latitude", "value": "" },
+            { "key": "longitude", "value": "" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get My Location (by IP)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/my-location",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","locations","my-location"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "lat1", "value": "12.9" },
+    { "key": "long1", "value": "77.5" },
+    { "key": "lat2", "value": "13.1" },
+    { "key": "long2", "value": "77.7" }
+  ]
+}
